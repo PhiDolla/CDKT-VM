@@ -1,0 +1,3 @@
+SQL select statement for login attempt from User: ktn8 and Password: cdkt | Unsuccessful because no matching records were retrieved.
+SQL insert for account registration User: ktn8 & Password: cdkt | Account was successfully registered.
+SQL select statement for login attempt from User: ktn8 and Password cdkt | Successful because there was a Username/Password match.
