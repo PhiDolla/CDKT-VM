@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <body>
+
+<center>
 
 <head>
 	<title>Login Page</title>
@@ -38,7 +41,7 @@ if($_GET['login'] == "failed"){
 ?>
 
 <form action="./php/login.php">
-    <h3>Login</h3>
+    <h3><u>Login</u></h3>
 
     <input type="text" placeholder="Username" name="username"><br>
     <input type="password" placeholder="Password" name="password"><br><br>
@@ -70,7 +73,7 @@ if($_GET['registration'] == "failed"){
 
 <form action="./php/registration.php">
 
-    <h3>Register Non-Existing User Account</h3>
+    <h3><u>Register Non-Existing User Account</u></h3>
 
     <input type="text" placeholder="New Username" name="registerUsername"><br>
     <input type="password" placeholder="New Password" name="registerPassword"><br><br>
@@ -79,6 +82,9 @@ if($_GET['registration'] == "failed"){
 
 </form>
 
+</center>
+
 </body>
 </html>
+
 

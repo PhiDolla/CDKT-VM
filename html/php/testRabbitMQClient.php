@@ -87,6 +87,45 @@ function retrieveProfileSongs($username){
 
         return $response;
 }
+
+function setComments($userProfile, $userCommenting, $date, $comment){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "setComments";
+	$request['userProfile'] = $userProfile;
+	$request['userCommenting'] = $userCommenting;
+	$request['date'] = $date;
+	$request['comment'] = $comment;
+
+        $response = $client->send_request($request);
+
+        return $response;
+}
+
+function getComments($userProfile){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "getComments";
+        $request['userProfile'] = $userProfile;
+
+        $response = $client->send_request($request);
+
+        return $response;
+}
+
+function getSongDiscovery(){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "getSongDiscovery";
+
+        $response = $client->send_request($request);
+
+        return $response;	
+}
+
 /*
 if (isset($argv[1])){
 	$msg = $argv[1];

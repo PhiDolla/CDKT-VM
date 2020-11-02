@@ -18,7 +18,7 @@ if(!isset($_SESSION['username'])){
 
 ?>
 
-<h1>Welcome to song search!</h1>
+<h1><u>Welcome to Song Search</u></h1>
 <h3>Below is a limited list of songs within our database. <br> 
 Feel free to use the provided search queries to find a song you are looking for.</h3>
 

@@ -18,7 +18,7 @@ function collectSpotifyTracks($songKey, $name, $album, $artist, $releaseDate, $l
 	 $selectQuery = "select * from trackTable where trackKey='$songKey'";
 	 $selectQueryResult = $mydb->query($selectQuery);
 
-         $insertQuery = "insert into trackTable(trackKey, trackName, trackAlbum, trackArtist, trackReleaseDate, trackLengthMilliseconds, trackPopularity, trackDanceability, trackEnergy, trackMusicKey, trackMode, trackDemoLink) values ('$songKey', '$name', '$album', '$artist', '$releaseDate', $length, $popularity, $danceability, $energy, $key, $mode, '$demoLink')";
+         $insertQuery = "insert into trackTable(trackKey, trackName, trackAlbum, trackArtist, trackReleaseDate, trackLengthMilliseconds, trackPopularity, trackDanceability, trackEnergy, trackMusicKey, trackMode, trackDemoLink) values ('$songKey', '$name', '$album', '$artist', '$releaseDate', '$length', '$popularity', '$danceability', '$energy', '$key', '$mode', '$demoLink')";
  
          if($selectQueryResult->num_rows == 0 && (mysqli_query($mydb, $insertQuery))){
                 echo "Spotify track $name by $artist has been added to database.";
@@ -26,8 +26,8 @@ function collectSpotifyTracks($songKey, $name, $album, $artist, $releaseDate, $l
 	} 
         else{
 		echo("Error description: " . mysqli_error($mydb));	
-		echo "Song was not added.";
-                return "Song not added.";
+		echo "Song was not added because of error (if specified) or because song is already in database.";
+		return "Song not added.";
         }
 }
 

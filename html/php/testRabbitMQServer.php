@@ -231,6 +231,69 @@ function getProfileSongs($username){
 	return $songProfileReturnArray;
 }
 
+function setComments($userProfile, $userCommenting, $date, $comment){
+	global $mydb;
+        $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+
+	$insertQuery = "insert into comments (userProfilePage, userCommenting, date, messageContent) values ('$userProfile', '$userCommenting', '$date', '$comment')";
+
+	if(mysqli_query($mydb, $insertQuery)){
+		echo "Comment from $userCommenting on $userProfile's profile was successful.";
+		return true;
+	}
+
+	elseif(!mysqli_query($mydb, $insertQuery)){
+		echo "Comment failed.";
+		return false;
+	}
+}
+
+function getComments($userProfile){
+	global $mydb;
+	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+	
+	$returnArray = array();
+
+
+	$selectQuery = "select userCommenting, date, messageContent from comments where userProfilePage='$userProfile'";
+	$selectResult = $mydb->query($selectQuery);
+
+	while($row = $selectResult->fetch_assoc()){
+		$commentInfo = array($row['userCommenting'],
+			$row['date'],
+			$row['messageContent']);
+
+		array_push($returnArray, $commentInfo);	
+	}
+	var_dump($returnArray);
+	return $returnArray;
+}
+
+function getSongDiscovery(){
+	global $mydb;
+	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+	
+	$returnArray = array();
+	$c = 0;
+
+	$selectQuery = "select * from trackTable where trackDemoLink!='None' order by rand()";
+	$selectResult = $mydb->query($selectQuery);
+
+	while($row = $selectResult->fetch_assoc()){
+		$songDiscoveryInfoArray = array($row['trackName'],
+                        $row['trackAlbum'], $row['trackArtist'],
+			$row['trackDemoLink']);
+		array_push($returnArray, $songDiscoveryInfoArray);
+		
+		$c++;
+		
+		if($c>2){
+			var_dump($returnArray);
+			return $returnArray;
+		}
+	}
+}
+
 function requestProcessor($request){
 	echo "Received Request:\n\n";
 	var_dump($request);
@@ -256,12 +319,26 @@ function requestProcessor($request){
 		case "addSong":
 			return addSong($request['username'], $request['trackId']);
 		case "getProfileSongs":
-			return getProfileSongs($request['username']);	
+			return getProfileSongs($request['username']);
+		case "setComments":
+			return setComments($request['userProfile'],
+				$request['userCommenting'],
+				$request['date'],
+				$request['comment']);
+		case "getComments":
+			return getComments($request['userProfile']);	
+		case "getSongDiscovery":
+			return getSongDiscovery();
 	}		
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
 $mydb = new mysqli('localhost','kevin','cdkt','CDKTTechnologies');
+
+if(!$mydb){
+	die("Connection failed: ".mysqli_connect_error());
+}
+
 $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
 $server->process_requests('requestProcessor');
 
