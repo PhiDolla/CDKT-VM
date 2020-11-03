@@ -37,12 +37,11 @@ function registration($username, $password){
         return $response;
 }
 
-function songSearch($songId){
+function songSearch(){
 	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 	$request = array();
 	$request['type'] = "songSearch";
-	$request['songId'] = $songId;
 
 	$response = $client->send_request($request);
 
@@ -126,21 +125,28 @@ function getSongDiscovery(){
         return $response;	
 }
 
-/*
-if (isset($argv[1])){
-	$msg = $argv[1];
-}
-else{
-        $msg = "test message";
-}
-*/
+function getRecommendedSongs($username){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
-/*
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
+        $request = array();
+	$request['type'] = "getRecommendedSongs";
+	$request['username'] = "$username";
 
-echo $argv[0]." END".PHP_EOL;
-*/
+        $response = $client->send_request($request);
+
+        return $response;
+}
+
+function accountExistsCheck($username){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "accountExistsCheck";
+        $request['username'] = "$username";
+
+        $response = $client->send_request($request);
+
+        return $response;
+}
 
 ?>

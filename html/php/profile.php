@@ -13,16 +13,45 @@ include('functionHolder.php');
 
 session_start();
 
+#$check = accountExistsCheck($_GET['username']);
+
+#if(((!$check) && !isset($_SESSION['username']))){
+#	header("location:./homepage.php?check=failed");
+#	exit(0);
+#}
+
 if(!isset($_SESSION['username'])){
 	header("location:../loginPage.php");
+	exit(0);
 }
 
-if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SESSION['username'] == $_GET['username'])){
-	?><h1><u>Welcome to Your Profile Page</u></h1><?php
-	echo "<h3><u>Your playlist</u></h3>";
+if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SESSION['username'] == $_GET['username']) or (isset($_GET['recommendations'])) or (isset($_GET['Add']))){
+	
+	echo '<a href="homepage.php">Homepage</a>';
+	echo ' | ';
+	echo '<a href="songDiscovery.php">Song Discovery</a>';
+	echo ' | ';
+	echo '<a href="songSearcher.php">Song Search</a>';
+	echo ' | ';
+	echo '<a href="logout.php?logout">Logout</a>';
+
+	?><h1><u>Welcome to Your Profile Page</u></h1>
+	<h3><u>Your Playlist</h3></u><?php
+
+	if(isset($_GET['Add'])){
+        $songAdded = addSongToProfile($_SESSION['username'], $_GET['Add']);
+
+        if($songAdded){
+                echo "<b>Song has been successfully added to your profile.</b><br><br>";
+}
+        else{
+                echo "<b>Song not added because it is already added to your profile.</b><br><br>";
+        }
+}
+
 	$outputArray = retrieveProfileSongs($_SESSION['username']);
 	?>
-
+	
 	<table border=2>
 	
 	<tr>
@@ -37,6 +66,7 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
         </tr> 
 	
 	<?php
+	if($outputArray != false){
 	for($i = 0; $i < count($outputArray); $i++){
 		?>
 
@@ -50,14 +80,62 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 		<td> <?php echo convertMode($outputArray[$i][8]);?> </td>
 		<td> <?php echo convertKey($outputArray[$i][9]);?> </td>
 		</tr>
+
 		<?php
 	}
+}
 	?></table>
 
-	<h3><u>Recommended Songs</u></h3>
+	<h3><u>Songs We Think You'd Like Based on Your Playlist</u></h3>
 
+	<?php
+	$recommendationArray = getRecommendedSongs($_SESSION['username']);
+	?>
 
+	<table border=2>
 
+        <tr>
+        <th>Song</th>
+        <th>Album</th>
+        <th>Artist</th>
+        <th>Release Date</th>
+        <th>Song Length</th>
+        <th>Popularity</th>
+        <th>Mode/Scale</th>
+	<th>Key</th>
+	<th>Add Song to Profile</th>
+        </tr>
+
+	<?php
+	if($recommendationArray != false){	
+	for($i=0; $i<count($recommendationArray); $i++){
+                ?>
+
+                <tr>
+                <td> <?php echo $recommendationArray[$i][2];?> </td>
+                <td> <?php echo $recommendationArray[$i][3];?> </td>
+                <td> <?php echo $recommendationArray[$i][4];?> </td>
+                <td> <?php echo $recommendationArray[$i][5];?> </td>
+                <td> <?php echo milliConversion($recommendationArray[$i][6]);?> </td>
+                <td> <?php echo $recommendationArray[$i][7];?> </td>
+                <td> <?php echo convertMode($recommendationArray[$i][8]);?> </td>
+		<td> <?php echo convertKey($recommendationArray[$i][9]);?> </td>
+		<td><form action="./profile.php">
+                <input type="submit" name=<?php echo $recommendationArray[$i][1]; ?> value="Add">
+                <input type="hidden" name="Add" value=<?php echo $recommendationArray[$i][1];?>>
+                </form></td>	
+                </tr>
+
+                <?php
+        }
+}
+	?>
+		
+	</table>	
+	<br>	
+	<form action="./profile.php">
+	<input type="submit" value="Get New Recommendations" name="recommendations"</input>
+	</form>
 
 	<h3><u>Comment Section</u></h3>
 		
@@ -87,9 +165,18 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 
 elseif(isset($_GET['profileSearch'])){
 	$userProfile = $_GET['username'];
+
+	echo '<a href="homepage.php">Homepage</a>';
+	echo ' | ';
+	echo '<a href="songDiscovery.php">Song Discovery</a>';
+	echo ' | ';
+	echo '<a href="songSearcher.php">Song Search</a>';
+	echo ' | ';
+	echo '<a href="logout.php?logout">Logout</a>';
+
 	?><h1><u>Welcome to <?php echo $_GET['username'];?>'s Profile Page</u></h1>
 	<?php
-	echo "<h3>Below is a table of $userProfile's playlist.</h3>";
+	echo "<h3><u>Below is $userProfile's playlist.</u></h3>";
 	$outputArray = retrieveProfileSongs($_GET['username']);
         ?>
 
@@ -149,11 +236,14 @@ elseif(isset($_GET['profileSearch'])){
         </form>
 <?php
 }
-	
-echo '<br><br><a href="homepage.php">Homepage Directory</a><br><br>';
-echo '<a href="songDiscovery.php">Song Discovery</a><br>';
-echo '<a href="songSearcher.php">Song Search</a><br>';
-echo '<br><a href="logout.php?logout">Logout</a><br>';
+
+echo '<br><a href="homepage.php">Homepage</a>';
+echo ' | ';
+echo '<a href="songDiscovery.php">Song Discovery</a>';
+echo ' | ';
+echo '<a href="songSearcher.php">Song Search</a>';
+echo ' | ';
+echo '<a href="logout.php?logout">Logout</a>';
 
 ?>
 </body>

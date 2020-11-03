@@ -82,70 +82,72 @@ function doRegistration($username, $password){
 	}
 }
 
-function retrieveSongs($songId){
+function retrieveSongs(){
 	global $mydb;
         $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
-	
-	$songInfoArray = array();
+
+	$returnArray = array();
 		
 	$selectQueryTotal = "select * from trackTable";
 	$selectQueryTotalResult = $mydb->query($selectQueryTotal);
 	$totalRows = $selectQueryTotalResult->num_rows;
-	$randNum = rand(1, $totalRows);
 
-	$selectQuery = "select * from trackTable where trackId=$randNum";
+	$selectQuery = "select * from trackTable order by rand()";
         $selectResult = $mydb->query($selectQuery);	
-	
-	$totalRows++;
+	$c=0;
 
-	if($selectResult->num_rows > 0){
-		while($row = $selectResult->fetch_assoc()){
-			array_push($songInfoArray,
-				$row['trackId'],
-				$row['trackKey'],
-				$row['trackName'],
-				$row['trackAlbum'],
-				$row['trackArtist'],
-				$row['trackReleaseDate'],
-				$row['trackLengthMilliseconds'],
-				$row['trackPopularity']);
+	while($row = $selectResult->fetch_assoc()){
+		$songInfoArray = array($row['trackId'],
+			$row['trackKey'],
+			$row['trackName'],
+			$row['trackAlbum'],
+			$row['trackArtist'],
+			$row['trackReleaseDate'],
+			$row['trackLengthMilliseconds'],
+			$row['trackPopularity']);
+		array_push($returnArray, $songInfoArray);
+		$c++;
+		if($c==25){
+			return $returnArray;
 		}
 	}
-	array_push($songInfoArray, $totalRows);
-	return $songInfoArray;
 }
 
 function retrieveSongsQuery($song, $album, $artist){
 	global $mydb;
         $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");	
-	$songQueryArray = array();
+	$returnArray = array();
 
 	if($song == ''){
 		$song = '1=1';
 	}
 	else{
-		$song = "trackName='$song'";
+		$song = "trackName like '%$song%'";
 	}
 	
 	if($album == ''){
 		$album = '1=1';
 	}
 	else{
-		$album = "trackAlbum='$album'";
+		$album = "trackAlbum like '%$album%'";
 	}
 
 	if($artist == ''){
 		$artist = '1=1';
 	}
 	else{
-		$artist = "trackArtist='$artist'";
+		$artist = "trackArtist like '%$artist%'";
 	}
 
 	$selectQuery = "select * from trackTable where $song and $album and $artist";
+
 	echo $selectQuery;
+
 	$selectResult = $mydb->query($selectQuery);
-	$totalRows = $selectResult->num_rows;
-	$totalRows ++;
+	$count=0;
+	$max=50;
+
+	var_dump($selectResult);
 
 	if($selectResult->num_rows > 0){
 		while($row = $selectResult->fetch_assoc()){
@@ -156,16 +158,17 @@ function retrieveSongsQuery($song, $album, $artist){
 				$row['trackArtist'], 
 				$row['trackReleaseDate'], 
 				$row['trackLengthMilliseconds'], 
-				$row['trackPopularity'],
-				$totalRows);
-			# var_dump($songInfoArray);
-			array_push($songQueryArray, $songInfoArray);
+				$row['trackPopularity']);
+			array_push($returnArray, $songInfoArray);
+			$count++;
+			if($count==$max){
+				return $returnArray;
+			}
 		}
-		return $songQueryArray;
-	}	
-	
+		return $returnArray;
+	}		
 	elseif($selectResult->num_rows == 0){
-		return 0;
+		return "no rows";
 	}
 }
 
@@ -243,6 +246,7 @@ function setComments($userProfile, $userCommenting, $date, $comment){
 	}
 
 	elseif(!mysqli_query($mydb, $insertQuery)){
+		echo "Error desc: $mydb->error \n";
 		echo "Comment failed.";
 		return false;
 	}
@@ -265,7 +269,6 @@ function getComments($userProfile){
 
 		array_push($returnArray, $commentInfo);	
 	}
-	var_dump($returnArray);
 	return $returnArray;
 }
 
@@ -282,15 +285,92 @@ function getSongDiscovery(){
 	while($row = $selectResult->fetch_assoc()){
 		$songDiscoveryInfoArray = array($row['trackName'],
                         $row['trackAlbum'], $row['trackArtist'],
-			$row['trackDemoLink']);
+			$row['trackDemoLink'],
+			$row['trackKey']);
 		array_push($returnArray, $songDiscoveryInfoArray);
 		
 		$c++;
 		
 		if($c>2){
+			return $returnArray;
+		}
+	}
+}
+
+function getRecommendedSongs($username){
+	global $mydb;
+	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+	
+	$count=0;
+	$max=10;
+
+	$returnArray = array();
+
+	$selectAvgDanceQuery = "select AVG(trackDanceability) from trackTable left outer join profileSongs on trackTable.trackKey = profileSongs.trackId where username='$username'";
+	$selectAvgEnergyQuery = "select AVG(trackEnergy) from trackTable left outer join profileSongs on trackTable.trackKey = profileSongs.trackId where username='$username'";
+	
+	$avgDanceResult = $mydb->query($selectAvgDanceQuery);
+	$avgEnergyResult = $mydb->query($selectAvgEnergyQuery);
+	
+	var_dump($avgDanceResult);
+
+	while($row = $avgDanceResult->fetch_assoc()){
+		if($row['AVG(trackDanceability)'] == Null){
+			return false;
+		}
+		else{
+			$avgDance = $row['AVG(trackDanceability)'];
+			echo $avgDance;
+		}
+	}
+
+	while($row = $avgEnergyResult->fetch_assoc()){
+                if($row['AVG(trackEnergy)'] == Null){
+                        return false;
+		}
+		else{
+			$avgEnergy = $row['AVG(trackEnergy)'];
+                	echo $avgEnergy;
+		}
+        }
+
+	$selectAvgProfileQuery = "select * from trackTable where trackEnergy>$avgEnergy-.10 and trackEnergy<$avgEnergy+.10 and trackDanceability<$avgDance+.1 and trackDanceability>$avgDance-.1 order by rand()";
+	$selectAvgProfileResult = $mydb->query($selectAvgProfileQuery);
+
+	while($row = $selectAvgProfileResult->fetch_assoc()){
+		$songProfileInfoArray = array
+                                ($row['trackId'],
+                                $row['trackKey'],
+                                $row['trackName'],
+                                $row['trackAlbum'],
+                                $row['trackArtist'],
+                                $row['trackReleaseDate'],
+                                $row['trackLengthMilliseconds'],
+                                $row['trackPopularity'],
+                                $row['trackMusicKey'],
+				$row['trackMode']);
+		array_push($returnArray, $songProfileInfoArray);
+		$count++;
+		if($count==$max){
 			var_dump($returnArray);
 			return $returnArray;
 		}
+	}
+	return $returnArray;
+}
+
+function accountExistsCheck($username){
+	global $mydb;
+	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+
+	$selectQuery = "select * from userCredentials where username='$username'";
+	$selectResult = $selectResult = $mydb->query($selectQuery);
+
+	if($selectResult->num_rows == 0){
+		return false;
+	}
+	else{
+		return true;
 	}
 }
 
@@ -312,7 +392,7 @@ function requestProcessor($request){
     		case "validate_session":
       			return doValidate($request['sessionId']);	
 		case "songSearch":
-			return retrieveSongs($request['songId']);
+			return retrieveSongs();
 		case "songSearchQuery":
 			return retrieveSongsQuery($request['song'],
 				$request['album'], $request['artist']);
@@ -329,6 +409,10 @@ function requestProcessor($request){
 			return getComments($request['userProfile']);	
 		case "getSongDiscovery":
 			return getSongDiscovery();
+		case "getRecommendedSongs":
+			return getRecommendedSongs($request['username']);
+		case "accountExistsCheck":
+			return accountExistsCheck($request['username']);
 	}		
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
