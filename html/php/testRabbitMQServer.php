@@ -3,6 +3,7 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+ini_set('display_startup_errors', 'On');
 
 require_once('path.inc');
 require_once('get_host_info.inc');
@@ -194,6 +195,7 @@ function addSong($username, $trackId){
 
 function getProfileSongs($username){
 	global $mydb;
+
 	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
 	$songProfileArray = array();
 
@@ -211,7 +213,7 @@ function getProfileSongs($username){
 		echo "No songs in user account.";
 		return False;
 	}
-
+	
 	for($i = 0; $i < count($songProfileArray); $i++){	
 		$selectQuery2 = "select * from trackTable where trackKey='$songProfileArray[$i]'";
 		$selectResult = $mydb->query($selectQuery2);
@@ -228,7 +230,7 @@ function getProfileSongs($username){
 				$row['trackPopularity'],
 				$row['trackMusicKey'],
 				$row['trackMode']);
-				array_push($songProfileReturnArray, $songProfileInfoArray);
+			array_push($songProfileReturnArray, $songProfileInfoArray);
 		}
 	}
 	return $songProfileReturnArray;
@@ -352,10 +354,11 @@ function getRecommendedSongs($username){
 		array_push($returnArray, $songProfileInfoArray);
 		$count++;
 		if($count==$max){
-			var_dump($returnArray);
+			# var_dump($returnArray);
 			return $returnArray;
 		}
 	}
+	var_dump($returnArray);
 	return $returnArray;
 }
 
@@ -375,7 +378,7 @@ function accountExistsCheck($username){
 }
 
 function requestProcessor($request){
-	echo "Received Request:\n\n";
+	echo "\nReceived Request:\n\n";
 	var_dump($request);
 
 	if(!isset($request['type'])){

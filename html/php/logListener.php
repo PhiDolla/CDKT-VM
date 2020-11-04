@@ -5,20 +5,11 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-include ('logFunction.php');
 
-function storeLogs($message, $fileName){	
-	$dir="logs";
-	
-	if (!file_exists($dir)){
-		mkdir($dir, 0777, true); 
-	}
-
- 	$file = fopen("./logs/$fileName" . '.log', 'a' );
+function storeLogs($message, $fileName){
+	$file = fopen("./logs/$fileName".".log", "a" );
         fwrite($file, $message);
-	fclose($file);
-
-        return true;    
+	fclose($file); 
 }
 
 function requestProcessor($request){
@@ -30,7 +21,7 @@ function requestProcessor($request){
 	}
 
 	switch ($request['type']){
-		case "log-error":
+		case "logErrors":
       			$msg = storeLogs($request['message'], "logError");
 			#return storeLogs($request['message'], "logError");
 			break;

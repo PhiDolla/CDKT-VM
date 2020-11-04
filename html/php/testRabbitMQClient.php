@@ -6,7 +6,24 @@ ini_set('display_errors', 'On');
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-# include('logFunction.php');
+
+function logErrors($errorNumber, $errorString, $errorFile, $errorLine){
+        $client = new rabbitMQClient("testRabbitMQ.ini", "logServer");
+	
+	$time =  date("M/d/Y | h:i:sa");
+	$message = "\n[$time] Error Code: $errorNumber | Description - $errorString | Error Location: $errorFile | On Line: $errorLine";
+
+        $request = array();
+
+        $request['type'] = "logErrors";
+        $request['message'] = $message;
+
+        #$response = $client->send_request($request);
+        $response = $client->publish($request);
+
+        return $response;
+}
+
 
 function login($username, $password){
 	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
@@ -19,6 +36,8 @@ function login($username, $password){
 	
 	$response = $client->send_request($request);
 	#$response = $client->publish($request);
+	
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
 	return $response;
 }
@@ -33,6 +52,8 @@ function registration($username, $password){
 
 	$response = $client->send_request($request);
         #$response = $client->publish($request);
+	
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
         return $response;
 }
@@ -44,6 +65,8 @@ function songSearch(){
 	$request['type'] = "songSearch";
 
 	$response = $client->send_request($request);
+	
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
 	return $response;	
 }
@@ -59,6 +82,8 @@ function songSearchQuery($song, $album, $artist){
 
         $response = $client->send_request($request);
 
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
+
         return $response;
 }
 
@@ -72,6 +97,8 @@ function addSongToProfile($username, $trackId){
 
         $response = $client->send_request($request);
 
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
+
         return $response;	
 }
 
@@ -83,6 +110,8 @@ function retrieveProfileSongs($username){
         $request['username'] = $username;
 
         $response = $client->send_request($request);
+
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
         return $response;
 }
@@ -99,6 +128,8 @@ function setComments($userProfile, $userCommenting, $date, $comment){
 
         $response = $client->send_request($request);
 
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
+
         return $response;
 }
 
@@ -111,6 +142,8 @@ function getComments($userProfile){
 
         $response = $client->send_request($request);
 
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
+
         return $response;
 }
 
@@ -122,6 +155,8 @@ function getSongDiscovery(){
 
         $response = $client->send_request($request);
 
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
+
         return $response;	
 }
 
@@ -131,6 +166,8 @@ function getRecommendedSongs($username){
         $request = array();
 	$request['type'] = "getRecommendedSongs";
 	$request['username'] = "$username";
+
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
         $response = $client->send_request($request);
 
@@ -145,6 +182,8 @@ function accountExistsCheck($username){
         $request['username'] = "$username";
 
         $response = $client->send_request($request);
+
+	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
         return $response;
 }

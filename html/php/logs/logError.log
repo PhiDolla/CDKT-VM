@@ -38,3 +38,66 @@
 [Oct/28/2020 | 12:00:09am]  2 in /home/tashid/git/rabbitmqphp_example/logListener.php at line 12. 
 [Oct/28/2020 | 12:00:09am]  2 in /home/tashid/git/rabbitmqphp_example/logListener.php at line 10. 
 [Oct/28/2020 | 12:00:09am]  2 in /home/tashid/git/rabbitmqphp_example/logListener.php at line 11. 
+[Nov/03/2020 | 09:26:54am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:26:54am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:32:51am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:32:51am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:33:04am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:33:04am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 09:42:06am] 2: doLogin(): Couldn't fetch mysqli in /var/www/html/php/testRabbitMQServer.php at line 22. 
+[Nov/03/2020 | 09:42:06am] 2: doLogin(): Couldn't fetch mysqli in /var/www/html/php/testRabbitMQServer.php at line 22. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli::query(): Couldn't fetch mysqli in /var/www/html/php/testRabbitMQServer.php at line 36. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli::query(): Couldn't fetch mysqli in /var/www/html/php/testRabbitMQServer.php at line 36. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli_fetch_array() expects parameter 1 to be mysqli_result, null given in /var/www/html/php/testRabbitMQServer.php at line 37. 
+[Nov/03/2020 | 09:42:06am] 2: mysqli_fetch_array() expects parameter 1 to be mysqli_result, null given in /var/www/html/php/testRabbitMQServer.php at line 37. 
+[Nov/03/2020 | 09:42:06am] 8: Trying to get property 'num_rows' of non-object in /var/www/html/php/testRabbitMQServer.php at line 41. 
+[Nov/03/2020 | 09:42:06am] 8: Trying to get property 'num_rows' of non-object in /var/www/html/php/testRabbitMQServer.php at line 41. 
+[Nov/03/2020 | 03:34:12pm] Error: 256, Failed to start request processor: AMQPException: Library error: unexpected protocol state in /var/www/html/php/rabbitMQLib.inc:122
+Stack trace:
+#0 /var/www/html/php/rabbitMQLib.inc(122): AMQPQueue->consume(Array)
+#1 /var/www/html/php/testRabbitMQServer.php(433): rabbitMQServer->process_requests('requestProcesso...')
+#2 {main} in /var/www/html/php/rabbitMQLib.inc at line 132. 
+[Nov/03/2020 | 03:34:12pm] Error: 256, Failed to start request processor: AMQPException: Library error: unexpected protocol state in /var/www/html/php/rabbitMQLib.inc:122
+Stack trace:
+#0 /var/www/html/php/rabbitMQLib.inc(122): AMQPQueue->consume(Array)
+#1 /var/www/html/php/testRabbitMQServer.php(433): rabbitMQServer->process_requests('requestProcesso...')
+#2 {main} in /var/www/html/php/rabbitMQLib.inc at line 132. 
+[Nov/03/2020 | 03:39:26pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:39:26pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:39:52pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:39:52pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:40:58pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:40:58pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:42:05pm] Error: 2, mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/aaa/php/testRabbitMQServer.php at line 128. 
+[Nov/03/2020 | 03:42:05pm] Error: 2, mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/aaa/php/testRabbitMQServer.php at line 128. 
+[Nov/03/2020 | 03:42:18pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:42:18pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:43:27pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:43:27pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:58:50pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 03:58:50pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 05:07:11pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 30. 
+[Nov/03/2020 | 05:07:11pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 30. 
+[Nov/03/2020 | 05:07:30pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 30. 
+[Nov/03/2020 | 05:07:30pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 30. 
+[Nov/03/2020 | 05:15:44pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 29. 
+[Nov/03/2020 | 05:15:44pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 29. 
+[Nov/03/2020 | 05:18:38pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 29. 
+[Nov/03/2020 | 05:18:38pm] 8: Undefined variable: logText2 in /var/www/html/php/login.php at line 29. 
+[Nov/03/2020 | 05:29:09pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 05:29:09pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 05:29:20pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 05:29:20pm] 2: mysqli::__construct(): (HY000/1045): Access denied for user 'kevin'@'localhost' (using password: YES) in /var/www/html/php/testRabbitMQServer.php at line 422. 
+[Nov/03/2020 | 07:45:44pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:50:07pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:50:08pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:50:09pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:50:09pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:50:11pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/logTestForPhpLogging.php | On Line: 6
+[Nov/03/2020 | 07:59:39pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/login.php | On Line: 10
+[Nov/03/2020 | 08:03:51pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/03/2020 | 08:03:54pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
+[Nov/03/2020 | 08:03:54pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
+[Nov/03/2020 | 08:03:56pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
