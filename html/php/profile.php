@@ -36,6 +36,25 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 	echo '<a href="logout.php?logout">Logout</a>';
 
 	?><h1><u>Welcome to Your Profile Page</u></h1>
+	
+	<?php
+
+	$privacy = privacyGet($_SESSION['username']);
+
+        if($privacy == 1){
+                echo "<b>Your account is currently public.</b>";
+        }
+        elseif($privacy == 0){
+                echo "<b>Your account is currently private.</b>";
+        }
+
+	?>
+
+	<form action="./profilePrivacy.php">
+	<input type="submit" name="public" value="Make Profile Public">
+	<input type="submit" name="private" value="Make Profile Private">
+	</form>	
+
 	<h3><u>Your Playlist</h3></u><?php
 
 	if(isset($_GET['Add'])){
@@ -55,14 +74,16 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 	<table border=2>
 	
 	<tr>
+	<th>Like?</th>
+	<th>Total Likes</th>
         <th>Song</th>
         <th>Album</th>
         <th>Artist</th>
         <th>Release Date</th>
         <th>Song Length</th>
-        <th>Popularity</th>
+        <!--<th>Popularity</th>
         <th>Mode/Scale</th>
-        <th>Key</th>
+        <th>Key</th>-->
         </tr> 
 	
 	<?php
@@ -71,14 +92,19 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 		?>
 
 		<tr>
+		<td><form action="./likeSong.php">
+                <input type="submit" name=<?php echo $outputArray[$i][1]; ?> value="Like/Unlike">
+                <input type="hidden" name="like" value=<?php echo $outputArray[$i][1];?>>
+                </form></td>
+		<td> <?php echo $outputArray[$i][10];?> </td>
 		<td> <?php echo $outputArray[$i][2];?> </td>
                 <td> <?php echo $outputArray[$i][3];?> </td>
                 <td> <?php echo $outputArray[$i][4];?> </td>
 		<td> <?php echo $outputArray[$i][5];?> </td>
 		<td> <?php echo milliConversion($outputArray[$i][6]);?> </td>
-		<td> <?php echo $outputArray[$i][7];?> </td>
+		<!--<td> <?php echo $outputArray[$i][7];?> </td>
 		<td> <?php echo convertMode($outputArray[$i][8]);?> </td>
-		<td> <?php echo convertKey($outputArray[$i][9]);?> </td>
+		<td> <?php echo convertKey($outputArray[$i][9]);?> </td>-->
 		</tr>
 
 		<?php
@@ -164,7 +190,11 @@ if((isset($_SESSION['username']) and (!isset($_GET['profileSearch']))) or ($_SES
 }
 
 elseif(isset($_GET['profileSearch'])){
+	
 	$userProfile = $_GET['username'];
+	$privacyIs = privacyGet($userProfile);
+
+	if($privacyIs==1){
 
 	echo '<a href="homepage.php">Homepage</a>';
 	echo ' | ';
@@ -235,9 +265,14 @@ elseif(isset($_GET['profileSearch'])){
                 <br><button type='submit' name='commentSubmit'>Comment</button>
         </form>
 <?php
+	}
+
+	elseif($privacyIs == 0){
+		echo "$userProfile has their profile set to private, sorry.";
+	}
 }
 
-echo '<br><a href="homepage.php">Homepage</a>';
+echo '<br><br><a href="homepage.php">Homepage</a>';
 echo ' | ';
 echo '<a href="songDiscovery.php">Song Discovery</a>';
 echo ' | ';

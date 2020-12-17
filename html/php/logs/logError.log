@@ -101,3 +101,13 @@ Stack trace:
 [Nov/03/2020 | 08:03:54pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
 [Nov/03/2020 | 08:03:54pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
 [Nov/03/2020 | 08:03:56pm] Error Code: 8 | Description - Undefined variable: a | Error Location: /var/www/html/php/profile.php | On Line: 16
+[Nov/05/2020 | 12:01:56pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 12:02:05pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 12:04:27pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 12:04:28pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 12:17:04pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 12:17:39pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 01:17:54pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 01:22:03pm] Error Code:  | Description -  | Error Location:  | On Line: 
+[Nov/05/2020 | 01:26:28pm] Error Code: 8 | Description - Undefined variable: A | Error Location: /var/www/html/php/login.php | On Line: 13
+[Nov/05/2020 | 02:07:31pm] Error Code: 8 | Description - Undefined variable: A | Error Location: /var/www/html/php/login.php | On Line: 13

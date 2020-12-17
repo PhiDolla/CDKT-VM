@@ -229,10 +229,12 @@ function getProfileSongs($username){
 				$row['trackLengthMilliseconds'],
 				$row['trackPopularity'],
 				$row['trackMusicKey'],
-				$row['trackMode']);
+				$row['trackMode'],
+				$row['totalLikes']);
 			array_push($songProfileReturnArray, $songProfileInfoArray);
 		}
 	}
+	#var_dump($songProfileReturnArray[0]);
 	return $songProfileReturnArray;
 }
 
@@ -243,13 +245,13 @@ function setComments($userProfile, $userCommenting, $date, $comment){
 	$insertQuery = "insert into comments (userProfilePage, userCommenting, date, messageContent) values ('$userProfile', '$userCommenting', '$date', '$comment')";
 
 	if(mysqli_query($mydb, $insertQuery)){
-		echo "Comment from $userCommenting on $userProfile's profile was successful.";
+		#echo "Comment from $userCommenting on $userProfile's profile was successful.";
 		return true;
 	}
 
 	elseif(!mysqli_query($mydb, $insertQuery)){
-		echo "Error desc: $mydb->error \n";
-		echo "Comment failed.";
+		#echo "Error desc: $mydb->error \n";
+		#echo "Comment failed.";
 		return false;
 	}
 }
@@ -260,10 +262,9 @@ function getComments($userProfile){
 	
 	$returnArray = array();
 
-
 	$selectQuery = "select userCommenting, date, messageContent from comments where userProfilePage='$userProfile'";
 	$selectResult = $mydb->query($selectQuery);
-
+	
 	while($row = $selectResult->fetch_assoc()){
 		$commentInfo = array($row['userCommenting'],
 			$row['date'],
@@ -314,7 +315,7 @@ function getRecommendedSongs($username){
 	$avgDanceResult = $mydb->query($selectAvgDanceQuery);
 	$avgEnergyResult = $mydb->query($selectAvgEnergyQuery);
 	
-	var_dump($avgDanceResult);
+	#var_dump($avgDanceResult);
 
 	while($row = $avgDanceResult->fetch_assoc()){
 		if($row['AVG(trackDanceability)'] == Null){
@@ -322,7 +323,7 @@ function getRecommendedSongs($username){
 		}
 		else{
 			$avgDance = $row['AVG(trackDanceability)'];
-			echo $avgDance;
+			#echo $avgDance;
 		}
 	}
 
@@ -332,7 +333,7 @@ function getRecommendedSongs($username){
 		}
 		else{
 			$avgEnergy = $row['AVG(trackEnergy)'];
-                	echo $avgEnergy;
+                	#echo $avgEnergy;
 		}
         }
 
@@ -358,7 +359,7 @@ function getRecommendedSongs($username){
 			return $returnArray;
 		}
 	}
-	var_dump($returnArray);
+	#var_dump($returnArray);
 	return $returnArray;
 }
 
@@ -367,13 +368,73 @@ function accountExistsCheck($username){
 	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
 
 	$selectQuery = "select * from userCredentials where username='$username'";
-	$selectResult = $selectResult = $mydb->query($selectQuery);
+	$selectResult = $mydb->query($selectQuery);
 
 	if($selectResult->num_rows == 0){
 		return false;
 	}
 	else{
 		return true;
+	}
+}
+
+function setPrivacy($privacy, $username){
+	global $mydb;
+	$server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+
+	$updateQuery = "update userCredentials set privacy=$privacy where username='$username';";
+        $updateResult = $mydb->query($updateQuery);	
+
+	if(mysqli_query($mydb, $updateQuery)){
+		echo "Privacy updated.";
+	}	
+}
+
+function getPrivacy($username){
+	global $mydb;
+        $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+	
+        $selectQuery = "select privacy from userCredentials where username='$username'";
+	$selectResult = $mydb->query($selectQuery);
+	
+	while($row = $selectResult->fetch_assoc()){
+		if($row['privacy'] == 1){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+}
+
+function setLikeFlag($username, $trackId){
+        global $mydb;
+        $server = new rabbitMQServer("testRabbitMQ.ini", "testServer");
+	
+	echo "\n$username, $trackId";
+
+	$selectQuery = "select likeFlag from profileSongs where username='$username' and trackId='$trackId'";
+	$selectResult = $mydb->query($selectQuery);
+	
+	while($row = $selectResult->fetch_assoc()){
+		if($row['likeFlag'] == 0){
+			echo "\nFalse, unliked, switch to true.";
+			$updateQuery = "update profileSongs set likeFlag=1 where username='$username' and trackId='$trackId'";
+			$updateResult = $mydb->query($updateQuery);
+				
+			$updateQuery2 = "update trackTable set totalLikes=totalLikes+1 where trackKey='$trackId'";
+			$updateResult2 = $mydb->query($updateQuery2);
+		}
+		elseif($row['likeFlag'] == 1){
+			echo "\nTrue, liked, switch to unliked.";
+			$updateQuery = "update profileSongs set likeFlag=0 where username='$username' and trackId='$trackId'";
+			$updateResult = $mydb->query($updateQuery);
+
+			$updateQuery2 = "update trackTable set totalLikes=totalLikes-1 where trackKey='$trackId'";
+			$updateResult2 = $mydb->query($updateQuery2);
+
+			#var_dump($updateResult2);
+		}
 	}
 }
 
@@ -416,6 +477,12 @@ function requestProcessor($request){
 			return getRecommendedSongs($request['username']);
 		case "accountExistsCheck":
 			return accountExistsCheck($request['username']);
+		case "setPrivacy":
+			return setPrivacy($request['privacy'], $request['username']);
+		case "getPrivacy":
+			return getPrivacy($request['username']);
+		case "setLikeTrueFalse":
+			return setLikeFlag($request['username'], $request['trackId']);
 	}		
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }

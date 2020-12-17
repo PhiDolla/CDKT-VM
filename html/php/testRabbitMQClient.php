@@ -8,8 +8,10 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 function logErrors($errorNumber, $errorString, $errorFile, $errorLine){
-        $client = new rabbitMQClient("testRabbitMQ.ini", "logServer");
-	
+
+	if(($errorNumber != '') or ($errorNumber!= Null)){
+	$client = new rabbitMQClient("testRabbitMQ.ini", "logServer");
+
 	$time =  date("M/d/Y | h:i:sa");
 	$message = "\n[$time] Error Code: $errorNumber | Description - $errorString | Error Location: $errorFile | On Line: $errorLine";
 
@@ -21,7 +23,8 @@ function logErrors($errorNumber, $errorString, $errorFile, $errorLine){
         #$response = $client->send_request($request);
         $response = $client->publish($request);
 
-        return $response;
+	return $response;
+	}
 }
 
 
@@ -186,6 +189,44 @@ function accountExistsCheck($username){
 	logErrors(error_get_last()["type"], error_get_last()["message"], error_get_last()["file"], error_get_last()["line"]);
 
         return $response;
+}
+
+function privacySet($privacySetting, $username){
+        $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "setPrivacy";
+        $request['privacy'] = $privacySetting;
+	$request['username'] = $username;	
+
+        $response = $client->send_request($request);
+
+        return $response;
+}
+
+function privacyGet($username){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "getPrivacy";
+        $request['username'] = $username;
+
+        $response = $client->send_request($request);
+
+        return $response;
+}
+
+function setLikeTrueFalse($username, $trackId){
+	$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+        $request = array();
+        $request['type'] = "setLikeTrueFalse";
+	$request['username'] = $username;
+	$request['trackId'] = $trackId;
+
+        $response = $client->send_request($request);
+
+        return $response;	
 }
 
 ?>
